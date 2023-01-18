@@ -33,6 +33,16 @@ public class AddressBookProcessorTest {
         assertEquals(7, ageDiff);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testGetAgeDifference_onePersonNotFound() {
+        addressBookProcessor.getAgeDifference("Bill McKnight", "John");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetAgeDifference_bothPeopleNotFound() {
+        addressBookProcessor.getAgeDifference("John", "Jane");
+    }
+
     @AfterClass
     public static void tearDown(){
         AddressBookProcessor addressBookProcessor = null;

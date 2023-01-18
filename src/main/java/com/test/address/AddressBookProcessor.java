@@ -42,16 +42,31 @@ public class AddressBookProcessor {
     }
 
     public long getNumMales() {
-        return 1l;
+        return addressBooks.stream()
+                        .filter(addressBook -> addressBook.getGender().equalsIgnoreCase("male"))
+                        .count();
     }
 
     public AddressBook getOldestPerson() {
-        return new AddressBook("","",LocalDate.now());
+        return addressBooks.stream()
+                        .min((a1, a2) -> a1.getDob().compareTo(a2.getDob()))
+                        .orElseThrow(() -> new RuntimeException("No people in address book"));
     }
 
 
     public int getAgeDifference(String name1, String name2) {
-        return 0;
+        Optional<AddressBook> addressBook1 = addressBooks.stream()
+                        .filter(address -> address.getName().equalsIgnoreCase(name1))
+                        .findFirst();
+        Optional<AddressBook> addressBook2 = addressBooks.stream()
+                        .filter(person -> person.getName().equalsIgnoreCase(name2))
+                        .findFirst();
+        if (!addressBook1.isPresent() || !addressBook2.isPresent()) {
+            throw new RuntimeException("One or both people not found in address book");
+        }
+        System.out.println(addressBook1.get().getDob().atStartOfDay());
+
+        return Period.between(addressBook1.get().getDob(), addressBook2.get().getDob()).getYears();
     }
 
 
